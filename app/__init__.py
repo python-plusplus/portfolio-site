@@ -88,7 +88,7 @@ def hobbies():
                        '=1559302854',
                 'desc': "I've been playing badminton ever since I was a little kid. I've played "
                         "at all collegiate levels and have multiple competitive accomplishments "
-                        "in the sport. "
+                        "in the sport. Super awesome stuff "
             },
             {
                 'name': 'Chess',
