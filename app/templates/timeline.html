@@ -18,28 +18,30 @@
 {% block content %}
 <h3 class="content-title">Timeline</h3>
 
-    <form id=postform action="http://localhost:5000/api/timeline_post" method="post">
+<div class="timeline-form">
+    <form class="timeline-form" id=postform action="http://sunny-portfolio.duckdns.org:5000/api/timeline_post" method="post">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name">
+        <input class="input" type="text" id="name" name="name">
         <label for="email">Email</label>
-        <input type="text" id="email" name="email">
+        <input class="input" type="text" id="email" name="email">
         <label for="content">Content</label>
     </form>
-    <textarea name="content" form="postform">Enter text here...</textarea>
-    <button id="createpost"> Submit </button>
+    <textarea class="input" name="content" form="postform" placeholder="Enter post content here..."></textarea>
+    <button class="btn" id="createpost"> Submit </button>
         <script>
         $("#createpost").click(function(e)
         {
             var postString = $("#postform").serialize()
             $.ajax({
                 type: "POST",
-                url: "http://localhost:5000/api/timeline_post",
+                url: "http://sunny-portfolio.duckdns.org:5000/api/timeline_post",
                 data: postString,
 
             });
-            location.reload(); //STOP default action
+	location.reload();
         });
     </script>
+</div>
 
     <ul class="education-wrapper">
         {% for post in timeline_posts %}
