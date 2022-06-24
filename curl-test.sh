@@ -14,4 +14,4 @@ else
 fi
 
 #If you want to delete the post after creation
-curl -s --request DELETE http://localhost:5000/api/timeline_post -d "id=$newId"
+#curl -s --request DELETE http://localhost:5000/api/timeline_post -d "id=$newId"

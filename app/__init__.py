@@ -1,5 +1,7 @@
 import os
 from typing import Any
+
+import requests
 from flask import Flask, make_response, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 from peewee import *
@@ -31,16 +33,16 @@ mydb.create_tables([TimelinePost])
 # Base content all pages need
 # used by the "profile" section of the template
 base_content = {
-    'name': 'MLH Fellow',
+    'name': 'Sunny Kim',
     'position': 'Software Engineer',
     'url': os.getenv("URL"),
     'socials': [{
         'name': 'Github',
-        'url': 'https://github.com/MLH-Fellowship',
+        'url': 'https://github.com/python-plusplus',
         'icon': './static/img/social/github.svg'
     }, {
         'name': 'LinkedIn',
-        'url': 'https://www.linkedin.com/company/major-league-hacking/',
+        'url': 'https://www.linkedin.com/in/sunghyoun-kim-583648217/',
         'icon': './static/img/social/linkedin.svg'
     }]
 }
@@ -118,14 +120,10 @@ def education():
     content = {
         **base_content,
         'educations': [{
-            'school': 'Meta University',
+            'school': 'University of Toronto',
             'degree': 'Bachelor of Science',
-            'major': 'Zucc Sciences',
-            'years': '2020 - Present'
-        }, {
-            'school': 'Atlantis High School',
-            'degree': 'High School Diploma',
-            'years': '2016 - 2020'
+            'major': 'Computer Science',
+            'years': '2022 - 2025'
         }]
     }
     return handle_route('Education', 'education', content)
@@ -138,20 +136,12 @@ def hobbies():
         'active_tab': 'hobbies',
         'hobbies': [
             {
-                'name': 'Badminton',
-                'img': 'https://cdn.shopify.com/s/files/1/0020/9407/1890/files/2_480x480.jpg?v'
-                       '=1559302854',
-                'desc': "I've been playing badminton ever since I was a little kid. I've played "
-                        "at all collegiate levels and have multiple competitive accomplishments "
-                        "in the sport. Super awesome stuff "
-            },
-            {
                 'name': 'Chess',
                 'img': 'https://images.ctfassets.net/3s5io6mnxfqz/wfAz3zUBbrcf1eSMLZi8u'
                        '/c03ac28c778813bd72373644ee8b8b02/AdobeStock_364059453.jpeg?fm=jpg&w=900'
                        '&fl=progressive',
                 'desc': "I've been playing chess since I was a little kid. I've played at all "
-                        "collegiate levels and have multiple competitve accomplishments in the "
+                        "collegiate levels and have multiple competitive accomplishments in the "
                         "sport."
             },
             {
@@ -203,6 +193,15 @@ def where_am_i():
     return handle_route('Where am I', 'where_am_i', content)
 
 
+@app.route('/timeline')
+def timeline():
+    content = {
+        **base_content,
+        **requests.get('http://localhost:5000/api/timeline_post').json()
+    }
+    return handle_route('Timeline', 'timeline', content)
+
+
 def handle_route(name: str, id: str, content):
     '''
     Handles routing logic for each page
@@ -244,7 +243,8 @@ def handle_route(name: str, id: str, content):
 # from the two pages, gets the animate.css animation to play
 # either a `animate__slideInLeft` or `animate__slideInRight`
 def get_animation(prev_page: str, curr_page: str) -> str:
-    pages = {'index': 0, 'about': 1, 'work': 2, 'education': 3, 'hobbies': 4, 'where_am_i': 5}
+    pages = {'index': 0, 'about': 1, 'work': 2, 'education': 3, 'hobbies': 4, 'where_am_i': 5,
+             'timeline': 6}
     anim = 'slideInRight' if pages[prev_page] < pages[curr_page] else 'slideInLeft'
     return f'animate__{anim}'
 
