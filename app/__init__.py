@@ -3,7 +3,9 @@ from typing import Any
 from flask import Flask, make_response, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 from peewee import *
+import datetime
 
+from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
 app = Flask(__name__)
@@ -13,8 +15,19 @@ mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
                      host=os.getenv("MYSQL_HOST"),
                      port=3306)
 
-print(mydb)
 
+class TimelinePost(Model):
+    name = CharField()
+    email = CharField()
+    content = CharField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = mydb
+
+
+mydb.connect()
+mydb.create_tables([TimelinePost])
 # Base content all pages need
 # used by the "profile" section of the template
 base_content = {
@@ -33,6 +46,37 @@ base_content = {
 }
 
 
+@app.route('/api/timeline_post', methods=["POST"])
+def post_timeline_post():
+    name = request.form['name']
+    email = request.form['email']
+    content = request.form['content']
+    timeline_post = TimelinePost.create(name=name, email=email, content=content)
+
+    return model_to_dict(timeline_post)
+
+
+@app.route('/api/timeline_post')
+def get_timeline_post():
+    return {
+        'timeline_posts': [
+            model_to_dict(p) for p in
+            TimelinePost.select().order_by(TimelinePost.created_at.desc())
+        ]
+    }
+
+
+@app.route('/api/timeline_post', methods=['DELETE'])
+def delete_timeline_post():
+    try:
+        to_del = TimelinePost.get(TimelinePost.id == request.form['id'])
+        to_del.delete_instance()
+        return {'success': 'true'}
+
+    except:
+        return {'success': 'false'}
+
+
 @app.route('/')
 def index():
     # no extra content needed
@@ -49,6 +93,7 @@ def about():
     }
     return handle_route('About', 'about', content)
 
+
 @app.route('/work')
 def work():
     content = {
@@ -57,15 +102,16 @@ def work():
             'name': 'Theoretical physicist',
             'location': 'Mars',
             'contact': '1 (202) 358-0001',
-            'description' : 'They wanted someone with a degree in theoretical physics and I said I have a theoretical physic degree and they let me in.'
-        },{
+            'description': 'They wanted someone with a degree in theoretical physics and I said I have a theoretical physic degree and they let me in.'
+        }, {
             'name': 'Computer programmer',
             'location': 'Memory Lane',
             'contact': '127.255.255.255',
-            'description' : 'Today I walked down a street where many computer programmers live. The houses were numbered 64k, 128k, 256k, 512k and 1MB. For some reason it felt like a trip down memory lane.'
+            'description': 'Today I walked down a street where many computer programmers live. The houses were numbered 64k, 128k, 256k, 512k and 1MB. For some reason it felt like a trip down memory lane.'
         }]
     }
     return handle_route('Work Experiences', 'work', content)
+
 
 @app.route('/education')
 def education():
@@ -143,11 +189,11 @@ def where_am_i():
             'name': 'Edmonton',
             'description': 'Capital of the texas of Canada',
             'coords': [53, -113]
-        },{
+        }, {
             'name': 'Seattle',
             'description': 'The seat of King County, Washington',
             'coords': [47, -120]
-        },{
+        }, {
             'name': 'San Juan',
             'description': 'Unincorporated territory of the United States',
             'coords': [18, -66]
