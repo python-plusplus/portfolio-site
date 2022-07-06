@@ -3,7 +3,7 @@ import os
 
 import unittest
 import os
-os.environ['TESTING'] = 'True'
+os.environ['TESTING'] = 'true'
 
 from app import app
 
@@ -25,7 +25,6 @@ class AppTestCase(unittest.TestCase):
        assert response.status_code == 200
        assert response.is_json
        json = response.get_json()
-       print(json)
        assert "timeline_posts" in json
        assert len(json["timeline_posts"]) == 0
        
