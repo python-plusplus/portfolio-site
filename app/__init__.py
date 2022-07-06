@@ -53,19 +53,29 @@ def post_timeline_post():
     name = request.form['name']
     email = request.form['email']
     content = request.form['content']
-    timeline_post = TimelinePost.create(name=name, email=email, content=content)
 
-    return model_to_dict(timeline_post)
+    name = request.form['name']
+    content = request.form['content']
+    email = request.form['email']
+    if name == "":
+        return "Invalid name", 400
+    elif not "@" in email:
+        return "Invalid email", 400
+    elif content == "":
+        return "Invalid content", 400
+    else: 
+        timeline_post = TimelinePost.create(name=name, email=email, content=content)
+        return model_to_dict(timeline_post)
 
 
 @app.route('/api/timeline_post')
 def get_timeline_post():
-    return {
-        'timeline_posts': [
-            model_to_dict(p) for p in
-            TimelinePost.select().order_by(TimelinePost.created_at.desc())
-        ]
-    }
+        return {
+            'timeline_posts': [
+                model_to_dict(p) for p in
+                TimelinePost.select().order_by(TimelinePost.created_at.desc())
+            ]
+        }
 
 
 @app.route('/api/timeline_post', methods=['DELETE'])
@@ -195,10 +205,18 @@ def where_am_i():
 
 @app.route('/timeline')
 def timeline():
-    content = {
-        **base_content,
-        **requests.get('http://localhost:5000/api/timeline_post').json()
-    }
+    posts = TimelinePost.select() 
+    
+    if  len(posts) == 0:
+        content = {
+            **base_content,
+        }    
+    else:
+        content = {
+            **base_content,
+            **requests.get('http://localhost:5000/api/timeline_post').json()
+        }
+    
     return handle_route('Timeline', 'timeline', content)
 
 
