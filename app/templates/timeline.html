@@ -3,7 +3,7 @@
 <!-- Imports -->
 {% block imports %}
     <head>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
     </head>
 {% set theme = request.cookies.get("theme") %}
 {% if theme == 'light' or not theme %}
@@ -19,7 +19,7 @@
 <h3 class="content-title">Timeline</h3>
 
 <div class="timeline-form">
-    <form class="timeline-form" id=postform action="/timeline_post" method="post">
+    <form class="timeline-form" id=postform action="https://sunny-portfolio.duckdns.org/timeline_post" method="post">
         <label for="name">Name</label>
         <input class="input" type="text" id="name" name="name">
         <label for="email">Email</label>
@@ -34,7 +34,7 @@
             var postString = $("#postform").serialize()
             $.ajax({
                 type: "POST",
-                url: "/timeline_post",
+                url: "https://sunny-portfolio.duckdns.org/timeline_post",
                 data: postString,
 
             });
