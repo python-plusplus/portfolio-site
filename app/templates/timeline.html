@@ -19,7 +19,7 @@
 <h3 class="content-title">Timeline</h3>
 
 <div class="timeline-form">
-    <form class="timeline-form" id=postform action="http://sunny-portfolio.duckdns.org:5000/api/timeline_post" method="post">
+    <form class="timeline-form" id=postform action="/timeline_post" method="post">
         <label for="name">Name</label>
         <input class="input" type="text" id="name" name="name">
         <label for="email">Email</label>
@@ -34,7 +34,7 @@
             var postString = $("#postform").serialize()
             $.ajax({
                 type: "POST",
-                url: "http://sunny-portfolio.duckdns.org:5000/api/timeline_post",
+                url: "/timeline_post",
                 data: postString,
 
             });
