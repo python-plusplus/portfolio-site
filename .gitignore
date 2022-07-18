@@ -7,5 +7,5 @@ flask.sqlite
 .DS_Store
 .idea
 .vscode
-.curl-test.sh
+curl-test.sh
 
