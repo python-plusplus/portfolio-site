@@ -116,11 +116,6 @@ def work():
     content = {
         **base_content,
         'jobs': [{
-            'name': 'Theoretical physicist',
-            'location': 'Mars',
-            'contact': '1 (202) 358-0001',
-            'description': 'They wanted someone with a degree in theoretical physics and I said I have a theoretical physic degree and they let me in.'
-        }, {
             'name': 'Computer programmer',
             'location': 'Memory Lane',
             'contact': '127.255.255.255',
